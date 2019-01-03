@@ -1,10 +1,10 @@
-Verify TxM Machine Learning Tool (verify-txm-ml) - inquisitivo bear
+# Verify TxM Machine Learning Tool (verify-txm-ml) - inquisitivo bear
 SecOps transaction monitoring machine learning deployment scripts for Verify
 
-Overview
+# Overview
 The TxM machine learning tool applies data anaylsis against TxM logs to create a model, which in turns allows us to enrich the TxM data with weights that can later be used for triaging false positives. The model is updated nightly using TxM scoring data ('scoring' being a flag set by our analysts, which trains the model).
 
-What's what?
+# What's what?
 Hopefully the Ansible will be fairly self explanatory, with the tool being installed by default ot /usr/local/verify-txm-ml.
 
 Three shell scripts run the tool via cron, those being:
@@ -12,7 +12,8 @@ Three shell scripts run the tool via cron, those being:
 check_txm.sh - A script that checks that the TxM model is updating as expected, and alerts via e-mail if it's not.
 TxM-Run.sh - A script that runs predict.py over the last 5 minutes of TxM logs, outputting a scored/weighted log entry. Includes some lock logic to prevent it running more than once at any time.
 TxM-Run-Training.sh - A script that runs the nightly model training, utilising several underlying scripts.
-How is the weighting processed?
+
+# How is the weighting processed?
 Currently predict.py, ran via TxM-Run.sh, outputs to two files based on the score. Anything with a score lower than 0.1 (10%) is pushed to the logroot_below file (currently /var/log/MachineID_ML_triggered_noalarm) and anything with a high score is pushed to the logroot_above file (currently /var/log/MachineID_ML_triggered). The SIEM tool of your choice can then reads these in and alarm as necessary.
 
 The score/threshold is controlled by the following in the predict.py script:
@@ -22,7 +23,7 @@ The score/threshold is controlled by the following in the predict.py script:
                         default=0.1)
 Endex.
 
-Talk to me about Ansible
+# Talk to me about Ansible
 The ansible role for this has primarily been put together for Debian 8.7, but should work on other flavours.
 
 To deploy, simply add a valid inventory and run:
